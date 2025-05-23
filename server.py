@@ -43,7 +43,7 @@ def agregar_editorial():
     state= datos.get('state')
     country= datos.get('country')
     cur= mysql.connection.cursor()
-    cur.execute('INSERT INTO pub_id, pub_name, city, state, country VALUES (%s, %s, %s, %s, %s)', (pub_id, pub_name, 
+    cur.execute('INSERT INTO editoriales (pub_id, pub_name, city, state, country) VALUES (%s, %s, %s, %s, %s)', (pub_id, pub_name, 
                                                                                                    city, state, country))
     mysql.connection.commit()
     return jsonify({"mensaje" : "Registro agregado"})
