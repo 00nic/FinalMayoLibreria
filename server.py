@@ -15,6 +15,7 @@ app.config['MYSQL_PORT']= int(os.getenv('MYSQL_PORT'))
 
 mysql= MySQL(app)
 
+#CASO N°1
 @app.route('/ventas/<year>', methods= ['GET'])
 def get_ventas(year):
     cur= mysql.connection.cursor()
@@ -25,6 +26,7 @@ def get_ventas(year):
     cur.close()
     return jsonify({ "Ventas" : ventas_json})
 
+#CASO N°2
 @app.route('/libros/<tipo>', methods= ['GET'])
 def get_libros(tipo):
     cur= mysql.connection.cursor()
@@ -34,6 +36,7 @@ def get_libros(tipo):
     cur.close()
     return jsonify({"Libros" : libros_json})
 
+#CASO N°3
 @app.route('/editorial', methods= ["POST"])
 def agregar_editorial():
     datos= request.get_json()
@@ -48,6 +51,16 @@ def agregar_editorial():
     mysql.connection.commit()
     return jsonify({"mensaje" : "Registro agregado"})
 
+#CASO N°4 
+@app.route('/editoriales/<pais>')
+def get_editoriales(pais):
+    cur= mysql.connection.cursor()
+    cur.execute('SELECT * FROM editoriales WHERE country = %s', (pais,))
+    editoriales= cur.fetchall()
+    cur.close()
+    json_editoriales= [{"pub_id" : pub_id, "pub_name" : pub_name, "city" : city, "state" : state, "country" : country}
+                       for pub_id, pub_name, city, state, country in editoriales]
+    return jsonify({"editoriales" : json_editoriales})
 
 if __name__ == ('__main__'):
     app.run(debug=True, port=5000)    
